@@ -66,8 +66,9 @@
   <script src="src/annotations-edit.js"></script>
 
   <!-- Load our language files -->
-  <script src="src/lang/help.de.js"></script>
   <script src="src/lang/help.en.js"></script>
+  <!-- 
+  <script src="src/lang/help.de.js"></script>
   <script src="src/lang/help.es.js"></script>
   <script src="src/lang/help.et.js"></script>
   <script src="src/lang/help.fr.js"></script>
@@ -79,6 +80,7 @@
   <script src="src/lang/help.se.js"></script>
   <script src="src/lang/help.tr.js"></script>
   <script src="src/lang/help.zh.js"></script>
+  -->
 
 <!--[if lt IE 7]>
   <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE7.js">IE7_PNG_SUFFIX = ".png";</script>
@@ -86,20 +88,38 @@
 
   <script>
 
+
+
+	var url = new URL(window.location.href);
+	var urlImage = url.searchParams.get("image");
+	var urlAnnotation = url.searchParams.get("annotation");
+	var urlProbabilities = url.searchParams.get("probabilities");
+
     // IIPMooViewer options: See documentation at http://iipimage.sourceforge.net for more details
     // Server path: set if not using default path
-    var server = '/fcgi-bin/iipsrv-jpeg2000.fcgi';
+    var server = '/iipsrv/iipsrv.fcgi';
 
     // The *full* image path on the server. This path does *not* need to be in the web
     // server root directory. On Windows, use Unix style forward slash paths without
     // the "c:" prefix
-    var image = '/path/to/image.tif';
+    var image = 'someimage.tif'; // initialization of default value
+    if (!(typeof urlImage === 'undefined' || urlImage == null || urlImage == '')) {
+    	image = urlImage;
+    }
+    var annotation = 'someimage-annot.tif'; // initialization of default value
+    if (!(typeof urlAnnotation === 'undefined' || urlAnnotation == null || urlAnnotation == '')) {
+    	annotation = urlAnnotation;
+    }
+    var probabilities = 'someimage-vis.tif'; // initialization of default value
+    if (!(typeof urlProbabilities === 'undefined' || urlProbabilities == null || urlProbabilities == '')) {
+    	probabilities = urlProbabilities;
+    }
 
     // Copyright or information message
-    var credit = '&copy; copyright or information message';
+    var credit = 'Example slide';
 
     // Create our iipmooviewer object
-    new IIPMooViewer( "viewer", {
+    var iip = new IIPMooViewer( "viewer", {
 	server: server,
 	image: image,
 	credit: credit,
@@ -107,6 +127,12 @@
 	  buttons: ['zoomIn','zoomOut','reset','rotateLeft','rotateRight']
 	}
     });
+
+    iip.blend( [ 
+		    [image,'slide'], 
+		    [annotation,'annotation'],
+		    [probabilities,'probabilities']
+    ] );
 
   </script>
 

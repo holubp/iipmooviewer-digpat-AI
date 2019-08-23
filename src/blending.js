@@ -18,6 +18,7 @@
 
 'use strict';
 
+var probabilityThreshold = 0;
 
 IIPMooViewer.implement({
 
@@ -58,8 +59,10 @@ IIPMooViewer.implement({
     // Create our control panel and inject it into our container
     new Element( 'div', {
       'class': 'blending',
-      'html': '<h2 title="<h2>Image Comparison</h2>Select the pair of images you wish<br/>to compare from the menus below.<br/>Use the slider to blend smoothly<br/>between them">Image Comparison</h2><span>Image 1</span><select id="baselayer"></select><br/><br/><span>Move slider to blend between images:</span><br/><div id="area"><div id="knob"></div></div><br/><span>Image 2</span><select id="overlay"></select><br/>'
+      'html': '<h2 title="<h2>Image Comparison</h2>Select the pair of images you wish<br/>to compare from the menus below.<br/>Use the slider to blend smoothly<br/>between them">Image Comparison</h2><span>Image 1</span><select id="baselayer"></select><br/><br/><span>Move slider to blend between images:</span><br/><div id="area"><div id="knob"></div></div><br/><span>Image 2</span><select id="overlay"></select><br/><br/><span>Threshold: <span id="probabilityThreshold"></span><span><br/><div id="area-t"><div id="knob-t"></div></div><br/>'
     }).inject( this.navigation.navcontainer );
+
+    document.getElementById("probabilityThreshold").innerHTML = probabilityThreshold;
 
     // Add a tooltip
     new Tips( 'div.blending h2', {
@@ -72,14 +75,28 @@ IIPMooViewer.implement({
     var slider = new Slider( document.id('area'), document.id('knob'), {
       range: [0,100],
       onChange: function(pos){
-	if( _this.images[1] ){
-	  _this.images[1].opacity = pos/100.0;
-	  _this.canvas.getChildren('img.layer1').setStyle( 'opacity', _this.images[1].opacity );
-	}
+         if( _this.images[1] ){
+           _this.images[1].opacity = pos/100.0;
+           _this.canvas.getChildren('img.layer1').setStyle( 'opacity', _this.images[1].opacity );
+         }
       }
     });
     // Make sure the slider takes into account window resize events
     window.addEvent('resize', function(){ slider.autosize(); });
+
+    // Create our thresholding slider2
+    var sliderT = new Slider( document.id('area-t'), document.id('knob-t'), {
+      range: [0,100],
+      onChange: function(pos){
+         document.getElementById("probabilityThreshold").innerHTML = probabilityThreshold;
+         probabilityThreshold = pos;
+         _this.canvas.getChildren('img.layer1').destroy();
+         _this.tiles.empty();
+         _this.requestImages();
+      }
+    });
+    // Make sure the slider takes into account window resize events
+    window.addEvent('resize', function(){ sliderT.autosize(); });
 
     // Add on change events to our select menus
     document.id('baselayer').addEvent('change', function(){
@@ -107,8 +124,17 @@ IIPMooViewer.implement({
     this.blend_index = 0;
     this.images[1] = {src: images[1][0], sds: '0,90', opacity: 0};
 
+
+// hopet's playground
+	  // This is the first version that somewhat works, except we need to have it on each zoom or change of the imgs
+    window.addEvent('load', function(){
+
+    });
+// end of hopet's playground
+	  
     // We build this only after the viewer has fully loaded
     this.addEvent('load', function(){
+	  
       // Build our controls
       this.createMultiBlendInterface();
     });

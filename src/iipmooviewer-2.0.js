@@ -431,16 +431,56 @@ var IIPMooViewer = new Class({
 	// Add our tile event functions after injection otherwise we get no event
 	tile.addEvents({
 	  'load': function(tile,id){
-	     if( this.effects ) tile.setStyle('opacity',1);
-	     tile.removeClass('hidden');
-	     if(!(tile.width&&tile.height)){
-	       tile.fireEvent('error');
-	       return;
-	     }
-	     this.nTilesLoaded++;
-	     if( this.navigation ) this.navigation.refreshLoadBar( this.nTilesLoaded, this.nTilesToLoad );
-	     if( this.nTilesLoaded >= this.nTilesToLoad ) this.canvas.setStyle( 'cursor', null );
-	     this.tiles.push(id); // Add to our list of loaded tiles
+             // hopet's playground
+             if( this.effects ) tile.setStyle('opacity',1);
+             if(!(tile.width&&tile.height)){
+                tile.fireEvent('error');
+                return;
+             }
+             var tilesrc = tile.src.toString();
+             // note that before removing the class name "hidden" the actual name of the "layer1" is "layer1 hidden"
+             if (!(tile.getAttribute("class") == "layer1 hidden" && tile.width > 0 && tile.height > 0 && (tilesrc.startsWith('/') || tilesrc.startsWith('http://') || tilesrc.startsWith('https://')))) {
+                tile.removeClass('hidden');
+                this.nTilesLoaded++;
+                if( this.navigation ) this.navigation.refreshLoadBar( this.nTilesLoaded, this.nTilesToLoad );
+                if( this.nTilesLoaded >= this.nTilesToLoad ) this.canvas.setStyle( 'cursor', null );
+                this.tiles.push(id); // Add to our list of loaded tiles
+             } else {
+                var cvs = document.createElement('canvas');
+                cvs.width = tile.width;
+                cvs.height = tile.height;
+                var ctx = cvs.getContext('2d');
+                ctx.drawImage(tile, 0, 0);
+                var n = tile.width * tile.height;
+                //try {
+                var tileData = ctx.getImageData(0, 0, tile.width, tile.height);
+                for (var i = 0; i <n; i++) {
+                   var pix = tileData.data.slice(i*4, i*4+4);
+                   if (1) {
+                      if (probabilityThreshold < 0) probabilityThreshold = 0;
+                      else if (probabilityThreshold > 100) probabilityThreshold = 100;
+                      if ( (pix[0]+pix[1]+pix[2])/3 >= (probabilityThreshold*255.0/100.0) ) {
+                         pix[3] = (pix[0]+pix[1]+pix[2])/3;
+                      } else {
+                         pix[3] = 0;
+                      }
+                      pix[0] = 210;
+                      pix[1] = 235;
+                      pix[2] = 0;
+                   } else {
+                      pix[3] = 255-(pix[0]+pix[1]+pix[2])/3;
+                      pix[0] = 0;
+                      pix[1] = 0;
+                      pix[2] = 0;
+                   }
+                   tileData.data.set(pix, i*4);
+                }
+                ctx.putImageData(tileData, 0, 0);
+                tile.src = cvs.toDataURL();
+                // } catch (e) { }
+             }
+
+             // end of hopet's playground
 	  }.bind(this,tile,k),
 	  'error': function(){
 	     // Try to reload if we have an error.
