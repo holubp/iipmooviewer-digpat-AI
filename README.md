@@ -11,7 +11,7 @@ Features beyond original IIPMooViewer
 -------------------------------------
 * Specification of base image, annotation, and probabilities (results of learning) as URL parameters
 * On the fly reprocessing of overlay layer to enable transparency.
-* Thresholding of 
+* Thresholding of probabilites
 
 
 Installation & Server & Configuration
