@@ -125,16 +125,8 @@ IIPMooViewer.implement({
     this.images[1] = {src: images[1][0], sds: '0,90', opacity: 0};
 
 
-// hopet's playground
-	  // This is the first version that somewhat works, except we need to have it on each zoom or change of the imgs
-    window.addEvent('load', function(){
-
-    });
-// end of hopet's playground
-	  
     // We build this only after the viewer has fully loaded
     this.addEvent('load', function(){
-	  
       // Build our controls
       this.createMultiBlendInterface();
     });

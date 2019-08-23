@@ -431,7 +431,6 @@ var IIPMooViewer = new Class({
 	// Add our tile event functions after injection otherwise we get no event
 	tile.addEvents({
 	  'load': function(tile,id){
-             // hopet's playground
              if( this.effects ) tile.setStyle('opacity',1);
              if(!(tile.width&&tile.height)){
                 tile.fireEvent('error');
@@ -480,7 +479,6 @@ var IIPMooViewer = new Class({
                 // } catch (e) { }
              }
 
-             // end of hopet's playground
 	  }.bind(this,tile,k),
 	  'error': function(){
 	     // Try to reload if we have an error.
