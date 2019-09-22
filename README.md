@@ -6,6 +6,7 @@ About
 -----
 Original IIPMooViewer is a high performance light-weight HTML5 Ajax-based javascript image streaming and zooming client designed for the IIPImage high resolution imaging system. This fork of IIPMooViewer aimed specifically at visualizations of results of machine learning (AI) on large digital pathology images. Designed to minimize changes of original IIPMooViewer.
 
+Forked.
 
 Features beyond original IIPMooViewer
 -------------------------------------
