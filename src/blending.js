@@ -29,21 +29,34 @@ IIPMooViewer.implement({
     // We build this only after the viewer has fully loaded
     this.addEvent('load', function(){
 
-      // Initialize our overlay image
-      this.images[1] = {src: images[0][0], sds: '0,90', opacity: 0};
+
 
       // Build our controls
       this.createBlendingInterface();
 
+
+
       // Go through our list of images and inject them into our menus
+     // each image in separate option
       images.each( function(item){
 	var o = new Element('option', {
 	  'value': item[0],
 	  'html': item[1]
-	 }).inject( document.id('baselayer') );
-	o.clone().inject( document.id('overlay') );
-        o.clone().inject( document.id('overlay_2'));
+	 });
+	if(item[1] == 'slide'){
+		o.inject( document.id('baselayer') );}
+	else if(item[1] == 'probabilities'){
+		o.inject( document.id('overlay') );}
+	else if(item[1] == 'annotation'){
+        	o.inject( document.id('overlay_2')); }
       });
+    // Create images and layers for blending sliders to work
+    this.images[1] = {src: document.id('overlay').value, opacity: 0};
+    this.canvas.getChildren('img.layer1').destroy();
+   this.images[2] = {src: document.id('overlay_2').value, opacity: 0};
+   this.canvas.getChildren('img.layer2').destroy();
+    this.requestImages();
+
 
       var _this = this;
 
@@ -91,7 +104,10 @@ IIPMooViewer.implement({
       onChange: function(pos){
          document.getElementById("probabilityThreshold").innerHTML = probabilityThreshold;
          probabilityThreshold = pos;
+        // need to destroy previous layers before requestImage otherwise they will append on each other
          _this.canvas.getChildren('img.layer1').destroy();
+	_this.canvas.getChildren('img.layer0').destroy();
+        _this.canvas.getChildren('img.layer2').destroy();
          _this.tiles.empty();
          _this.requestImages();
       }
@@ -99,11 +115,10 @@ IIPMooViewer.implement({
     // Make sure the slider takes into account window resize events
     window.addEvent('resize', function(){ sliderT.autosize(); });
 
-    // Create our second  blending slider for overlay_2
+    // Create our second  blending slider
     var slider_2 = new Slider( document.id('area_2'), document.id('knob_2'), {
       range: [0,100],
       onChange: function(pos){
-         console.log(_this.images, pos);
          if( _this.images[2] ){
            _this.images[2].opacity = pos/100.0;
            _this.canvas.getChildren('img.layer2').setStyle( 'opacity', _this.images[2].opacity );
@@ -113,7 +128,7 @@ IIPMooViewer.implement({
     // Make sure the slider takes into account window resize events
     window.addEvent('resize', function(){ slider_2.autosize(); });
 
-
+/*
 
     // Add on change events to our select menus
     document.id('baselayer').addEvent('change', function(){
@@ -144,7 +159,7 @@ IIPMooViewer.implement({
       _this.requestImages();
     });
 
-
+*/
 
 
 
