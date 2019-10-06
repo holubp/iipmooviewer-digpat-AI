@@ -19,6 +19,7 @@
 'use strict';
 
 var probabilityThreshold = 0;
+var usingTreshold = false;
 
 IIPMooViewer.implement({
 
@@ -33,7 +34,7 @@ IIPMooViewer.implement({
 
       // Build our controls
       this.createBlendingInterface();
-
+      //this.dynamic_annoation(images);
 
 
       // Go through our list of images and inject them into our menus
@@ -103,13 +104,14 @@ IIPMooViewer.implement({
       range: [0,100],
       onChange: function(pos){
          document.getElementById("probabilityThreshold").innerHTML = probabilityThreshold;
-         probabilityThreshold = pos;
-        // need to destroy previous layers before requestImage otherwise they will append on each other
+         probabilityThreshold = pos
+        usingTreshold = true;
          _this.canvas.getChildren('img.layer1').destroy();
-	_this.canvas.getChildren('img.layer0').destroy();
-        _this.canvas.getChildren('img.layer2').destroy();
+	//_this.canvas.getChildren('img.layer0').destroy();
+        //_this.canvas.getChildren('img.layer2').destroy();
          _this.tiles.empty();
          _this.requestImages();
+         usingTreshold = false;
       }
     });
     // Make sure the slider takes into account window resize events
@@ -166,6 +168,17 @@ IIPMooViewer.implement({
 
   },
 
+/*
+  dynamic_annoation: function(images){
+      var _this = this;
+
+      _this.canvas.on('click',function(event){
+          var pos_X = event.pageX - $(this).offset().left;
+          var pos_Y = event.pageY - $(this).offset().top;
+          console.log('You clicked on ' + pos_X +' '+ pos_Y)
+       });
+
+ }, */
 
 
 

@@ -397,10 +397,10 @@ var IIPMooViewer = new Class({
 	continue;
       }
 
-      // Iterate over the number of layers we have
+      // Iterate over the number of layers we have to inject them in canvas (for probability treshold we inject only layer1)
       var n;
       for(n=0;n<this.images.length;n++){
-
+       if ((usingTreshold && n == 1) || !usingTreshold){
         var tile = new Element('img', {
           'class': 'layer'+n+' hidden',
           'styles': {
@@ -509,7 +509,7 @@ var IIPMooViewer = new Class({
       }
 
     }
-
+   }
   },
 
 
