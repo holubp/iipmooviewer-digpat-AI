@@ -27,18 +27,32 @@ IIPMooViewer.implement({
 
   /* Create a new annotation, add it to our list and edit it
    */
-  newAnnotation: function(){
+  newAnnotation: function(new_x,new_y){
 
     // Create new ID for annotation
     var id = String.uniqueID();
 
     // Create default annotation and insert into our annotation array
-    var a = {
+   /* var a = {
       id: id,
       x: (this.wid<this.view.w) ? 0.25 : (this.view.x+this.view.w/4)/this.wid,
       y: (this.hei<this.view.h) ? 0.25 : (this.view.y+this.view.h/4)/this.hei,
       w: (this.wid<this.view.w) ? 0.5 : (this.view.w/(2*this.wid)),
       h: (this.hei<this.view.h) ? 0.5 : (this.view.h/(2*this.hei)),
+      category: '',
+      title: '',
+      text: ''
+    }; */
+
+
+// new annotation will be created around click position(new_x, new_y)
+// this.view.w * 0.1 this is pixel height/width of an annotation
+ var a = {
+      id: id,
+      x: (new_x - this.view.w * 0.1/2)/this.wid,
+      y: (new_y - this.view.w * 0.1/2)/this.hei,
+      w: 0.1,
+      h: 0.1,
       category: '',
       title: '',
       text: ''
@@ -57,8 +71,10 @@ IIPMooViewer.implement({
       'styles': {
         left: Math.round( a.x * this.wid ),
         top: Math.round( a.y * this.hei ),
-        width: Math.round(a.w * this.wid),
-        height: Math.round(a.h * this.hei)
+       // Keep dimension of w,h in relation to current view not whole canvas
+      // we are using 2x value of view width to create a square
+        width: Math.round(a.w * this.view.w),
+        height: Math.round(a.h * this.view.w)
       }
     }).inject( this.canvas );
 

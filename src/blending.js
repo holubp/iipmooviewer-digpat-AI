@@ -34,7 +34,7 @@ IIPMooViewer.implement({
 
       // Build our controls
       this.createBlendingInterface();
-      //this.dynamic_annoation(images);
+      this.dynamic_annoation();
 
 
       // Go through our list of images and inject them into our menus
@@ -168,17 +168,22 @@ IIPMooViewer.implement({
 
   },
 
-/*
-  dynamic_annoation: function(images){
+
+
+  dynamic_annoation: function(){
       var _this = this;
+      console.log(this);
+      _this.canvas.addEventListener("click",function(event){
+          if (event.ctrlKey){
+          _this.pos_X = event.pageX - _this.canvas.offsetLeft;
+          _this.pos_Y = event.pageY - _this.canvas.offsetTop;
+          console.log('You clicked on ' + _this.pos_X +' '+ _this.pos_Y);
+         _this.newAnnotation(_this.pos_X,_this.pos_Y);
+        }
+        });
 
-      _this.canvas.on('click',function(event){
-          var pos_X = event.pageX - $(this).offset().left;
-          var pos_Y = event.pageY - $(this).offset().top;
-          console.log('You clicked on ' + pos_X +' '+ pos_Y)
-       });
 
- }, */
+ },
 
 
 
