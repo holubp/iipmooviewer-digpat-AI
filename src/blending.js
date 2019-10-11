@@ -103,8 +103,8 @@ IIPMooViewer.implement({
     var sliderT = new Slider( document.id('area-t'), document.id('knob-t'), {
       range: [0,100],
       onChange: function(pos){
+        probabilityThreshold = pos;
          document.getElementById("probabilityThreshold").innerHTML = probabilityThreshold;
-         probabilityThreshold = pos
         usingTreshold = true;
          _this.canvas.getChildren('img.layer1').destroy();
 	//_this.canvas.getChildren('img.layer0').destroy();

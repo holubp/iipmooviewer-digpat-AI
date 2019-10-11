@@ -55,7 +55,8 @@ IIPMooViewer.implement({
       h: 0.1,
       category: '',
       title: '',
-      text: ''
+      text: '',
+      treshold: probabilityThreshold
     };
 
     // Create an array if we don't have one and push a new annotation to it
@@ -124,14 +125,15 @@ IIPMooViewer.implement({
     }).inject( annotation );
 
     // Create our input fields
-    var html = '<table><tr><td>title</td><td>' +
+     var html = '<table><tr><td>title</td><td>' +
         '<input type="text" name="title" tabindex="1" autofocus value="{title}">'+
         '</td></tr>' +
         '<tr><td>category</td><td>' +
-        '<input type="text" name="category" tabindex="2" value="{category}">' +
+        '<select tabindex="2" name="category"> <option value="0" selected>0</option>  <option value="1">1</option>  </select>' +
         '</td></tr>' +
+        '<tr><td>treshold</td><td>'+annotation_item.treshold+'</td></tr>' +
         '<tr><td colspan="2">' +
-        '<textarea name="text" rows="5" tabindex="3">{text}</textarea>' +
+        '<textarea placeholder="Add comment..." name="text" rows="5" tabindex="3">{text}</textarea>' +
         '</td></tr></table>';
 
     form.set('html', html.substitute({

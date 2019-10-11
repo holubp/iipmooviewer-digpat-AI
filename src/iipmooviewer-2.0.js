@@ -1237,7 +1237,7 @@ var IIPMooViewer = new Class({
     this.canvas.addEvents({
       'mousewheel:throttle(75)': this.zoom.bind(this),
       'dblclick': this.zoom.bind(this),
-      'mousedown': function(e){ var event = new DOMEvent(e); event.stop(); },
+      //'mousedown': function(e){ var event = new DOMEvent(e); event.stop(); },
       'mousemove:throttle(75)': coordsBind, // Throttle to avoid unnecessary updating
       'mouseenter': function(){ if( _this.navigation && _this.navigation.coords ) _this.navigation.coords.fade(0.65); },
       'mouseleave': function(){ if( _this.navigation && _this.navigation.coords ) _this.navigation.coords.fade('out'); }
