@@ -27,13 +27,13 @@ IIPMooViewer.implement({
 
   /* Create a new annotation, add it to our list and edit it
    */
-  newAnnotation: function(){
+  newAnnotation: function(new_x,new_y){
 
     // Create new ID for annotation
     var id = String.uniqueID();
 
     // Create default annotation and insert into our annotation array
-    var a = {
+   /* var a = {
       id: id,
       x: (this.wid<this.view.w) ? 0.25 : (this.view.x+this.view.w/4)/this.wid,
       y: (this.hei<this.view.h) ? 0.25 : (this.view.y+this.view.h/4)/this.hei,
@@ -42,6 +42,21 @@ IIPMooViewer.implement({
       category: '',
       title: '',
       text: ''
+    }; */
+
+
+// new annotation will be created around click position(new_x, new_y)
+// this.view.w * 0.1 this is pixel height/width of an annotation
+ var a = {
+      id: id,
+      x: (new_x - this.view.w * 0.1/2)/this.wid,
+      y: (new_y - this.view.w * 0.1/2)/this.hei,
+      w: 0.1,
+      h: 0.1,
+      category: '',
+      title: '',
+      text: '',
+      treshold: probabilityThreshold
     };
 
     // Create an array if we don't have one and push a new annotation to it
@@ -57,8 +72,10 @@ IIPMooViewer.implement({
       'styles': {
         left: Math.round( a.x * this.wid ),
         top: Math.round( a.y * this.hei ),
-        width: Math.round(a.w * this.wid),
-        height: Math.round(a.h * this.hei)
+       // Keep dimension of w,h in relation to current view not whole canvas
+      // we are using 2x value of view width to create a square
+        width: Math.round(a.w * this.view.w),
+        height: Math.round(a.h * this.view.w)
       }
     }).inject( this.canvas );
 
@@ -108,14 +125,15 @@ IIPMooViewer.implement({
     }).inject( annotation );
 
     // Create our input fields
-    var html = '<table><tr><td>title</td><td>' +
+     var html = '<table><tr><td>title</td><td>' +
         '<input type="text" name="title" tabindex="1" autofocus value="{title}">'+
         '</td></tr>' +
         '<tr><td>category</td><td>' +
-        '<input type="text" name="category" tabindex="2" value="{category}">' +
+        '<select tabindex="2" name="category"> <option value="0" selected>0</option>  <option value="1">1</option>  </select>' +
         '</td></tr>' +
+        '<tr><td>treshold</td><td>'+annotation_item.treshold+'</td></tr>' +
         '<tr><td colspan="2">' +
-        '<textarea name="text" rows="5" tabindex="3">{text}</textarea>' +
+        '<textarea placeholder="Add comment..." name="text" rows="5" tabindex="3">{text}</textarea>' +
         '</td></tr></table>';
 
     form.set('html', html.substitute({

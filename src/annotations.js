@@ -86,6 +86,8 @@ IIPMooViewer.implement({
 
       var annotation = $('annotation-' + annotation_item.id);
       if (annotation) {
+        //console.log(annotation_item);
+        //console.log(annotation);
         annotation.setStyles(position);
       }
       else {
@@ -123,8 +125,11 @@ IIPMooViewer.implement({
     }
 
     // Add our annotation text
-    var text = annotation_item.text;
-    if (annotation_item.title) text = '<h1>' + annotation_item.title + '</h1>' + text;
+      var text = '';
+    if (annotation_item.title) text += '<h1>' + annotation_item.title + '</h1>';
+    text += '<p>'+ annotation_item.category + '</p>';
+    text += '<p>'+ annotation_item.treshold + '</p>';
+    text += '<p>' + annotation_item.text + '</p>';
     annotation.store('tip:text', text);
   },
 
