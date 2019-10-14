@@ -45,13 +45,14 @@
 
   <title>IIPMooViewer 2.0 :: HTML5 High Resolution Image Viewer</title>
 
+
   <script src="src/mootools-core-1.6.0.js"></script>
   <script src="src/mootools-more-1.6.0.js"></script>
 
   <!-- Main iipmooviewer include -->
   <script src="src/iipmooviewer-2.0.js"></script>
 
-  <!-- Load our protocols -->  
+  <!-- Load our protocols -->
   <script src="src/protocols/deepzoom.js"></script>
   <script src="src/protocols/djatoka.js"></script>
   <script src="src/protocols/iip.js"></script>
@@ -68,7 +69,7 @@
 
   <!-- Load our language files -->
   <script src="src/lang/help.en.js"></script>
-  <!-- 
+  <!--
   <script src="src/lang/help.de.js"></script>
   <script src="src/lang/help.es.js"></script>
   <script src="src/lang/help.et.js"></script>
@@ -116,6 +117,12 @@
     	probabilities = urlProbabilities;
     }
 
+     var tmp_annotations = {
+     1: { x: 0.1, y: 0.1, w: 0.1, h: 0.1, category: "test_annot", text: "This is a test annotations" }
+
+  };
+
+
     // Copyright or information message
     var credit = 'Example slide';
 
@@ -124,13 +131,14 @@
 	server: server,
 	image: image,
 	credit: credit,
+        annotations: {},
 	navigation: {
 	  buttons: ['zoomIn','zoomOut','reset','rotateLeft','rotateRight']
 	}
     });
 
-    iip.blend( [ 
-		    [image,'slide'], 
+    iip.blend( [
+		    [image,'slide'],
 		    [annotation,'annotation'],
 		    [probabilities,'probabilities']
     ] );
@@ -144,3 +152,4 @@
  </body>
 
 </html>
+
