@@ -1,3 +1,29 @@
+
+#save_button{
+position: fixed;
+  left: 10px;
+  bottom: 10px;
+  z-index: 99;
+  border: none;
+  color: #fff;
+ background: #222;
+  font-weight: normal;
+  padding: 5px;
+  font-size: 80%;
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+  border-radius: 0.3em;
+  box-shadow: 4px 4px 4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 4px 4px 4px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 4px 4px 4px rgba(0,0,0,0.75);
+  -o-box-shadow: 4px 4px 4px rgba(0,0,0,0.75);
+  text-shadow: 0.5px 0.5px 0 grey;
+  cursor: pointer;
+
+
+
+}
+
 .iipmooviewer {
   font-family: Verdana, sans-serif;
   left: 0;
@@ -623,7 +649,7 @@ div.blending div#area-t div#knob-t{
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b8bac6', endColorstr='#b8bac6',GradientType=1 ); /* IE6-8 */
 }
 
-/* new slider for overlay_2*/
+
 div.blending div#area_2{
 text-align: left;
 background: #333;
