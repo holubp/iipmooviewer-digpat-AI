@@ -277,13 +277,14 @@ IIPMooViewer.implement({
   xml_annotations = doc.createElement("Annotations");
   ASAP_annot.appendChild(xml_annotations);
   doc.appendChild(ASAP_annot);
+  var file_name = 'A-'+this.images[0].src.substring(2, this.images[0].src.length-4)+'.xml';
   // create save button
   var save_button = document.createElement("button");
   save_button.setAttribute("id","save_button");
   save_button.appendChild(document.createTextNode("Download annotations"));
   document.getElementById("viewer").appendChild(save_button);
   document.getElementById("save_button").addEventListener("click", function(){
-  _this.download(file_name, doc_text);
+  _this.download(file_name);
         });
  };
  first_annotation = false;
@@ -299,8 +300,8 @@ IIPMooViewer.implement({
   // create new annotation element for DOM
   var xml_annotation = doc.createElement("Annotation");
   xml_annotation.setAttribute("Name", "Annotation "+annotation.id);
-  xml_annotation.setAttribute("Type", "Polygon");
-  xml_annotation.setAttribute("PartofGroup", "Carcinoma");
+  xml_annotation.setAttribute("Type", "Rectangle");
+  xml_annotation.setAttribute("PartOfGroup", "None");
   xml_annotation.setAttribute("Color", "#F4FA58");
   var xml_coordinates = doc.createElement("Coordinates");
 
@@ -317,18 +318,17 @@ IIPMooViewer.implement({
   // append whole annotation to annotations
   xml_annotations.appendChild(xml_annotation);
   console.dirxml(doc);
- // convert xml to string
-  var xmlString = new XMLSerializer().serializeToString(doc);
-  var doc_text = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'+ xmlString;
-  var file_name = 'A-'+this.images[0].src.substring(2, this.images[0].src.length-4)+'.xml';
 
 
  },
 
-// Localy download given text as filename
-download: function(filename, text) {
+// Locally download xml doc  as filename
+download: function(filename) {
+ // convert xml to string
+  var xmlString = new XMLSerializer().serializeToString(doc);
+  var doc_text = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'+ xmlString;
   var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(doc_text));
   element.setAttribute('download', filename);
 
   element.style.display = 'none';
