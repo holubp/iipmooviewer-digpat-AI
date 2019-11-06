@@ -57,10 +57,9 @@ IIPMooViewer.implement({
     this.canvas.getChildren('img.layer1').destroy();
    this.images[2] = {src: document.id('overlay_2').value, opacity: 0};
    this.canvas.getChildren('img.layer2').destroy();
-/*
-this.images[3] = {src: document.id('overlay_3).value, opacity: 0};
-this.canvas.getChildren('image.layer3').destroy();
-*/
+   this.images[3] = {src: document.id('overlay_3').value, opacity: 0};
+   this.canvas.getChildren('image.layer3').destroy();
+
     this.requestImages();
 
 

@@ -288,7 +288,7 @@ IIPMooViewer.implement({
         });
  };
  first_annotation = false;
- // calculate 4 coordinates of square annotation in ralation with maximum resolution (original scan resolution)
+ // calculate 4 coordinates of square annotation in relation with maximum resolution (original scan resolution)
   var max_w = _this.max_size.w;
   var max_h = _this.max_size.h;
   var coordinates = [];

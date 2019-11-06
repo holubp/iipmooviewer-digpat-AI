@@ -96,6 +96,7 @@
 	var urlImage = url.searchParams.get("image");
 	var urlAnnotation = url.searchParams.get("annotation");
 	var urlProbabilities = url.searchParams.get("probabilities");
+        var urlDecision = url.searchParams.get("decision");
 
     // IIPMooViewer options: See documentation at http://iipimage.sourceforge.net for more details
     // Server path: set if not using default path
@@ -115,6 +116,11 @@
     var probabilities = 'P-2019_1502-02-1-vis.tif'; // initialization of default value
     if (!(typeof urlProbabilities === 'undefined' || urlProbabilities == null || urlProbabilities == '')) {
     	probabilities = urlProbabilities;
+    }
+
+var decision = 'P-2019_1502-02-1.tif'; // initialization of default value
+    if (!(typeof urlDecision === 'undefined' || urlDecision == null || urlDecision == '')) {
+    	decision = urlDecision;
     }
 
      var tmp_annotations = {
@@ -140,7 +146,10 @@
     iip.blend( [
 		    [image,'slide'],
 		    [annotation,'annotation'],
-		    [probabilities,'probabilities']
+		    [probabilities,'probabilities'],
+            [decision, 'decision']
+
+
     ] );
 
   </script>
