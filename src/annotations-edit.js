@@ -23,6 +23,10 @@
 
 /* Extend IIPMooViewer to handle annotations
  */
+var first_annotation = true;
+var doc ;
+var ASAP_annot ;
+var xml_annotations;
 IIPMooViewer.implement({
 
   /* Create a new annotation, add it to our list and edit it
@@ -79,6 +83,7 @@ IIPMooViewer.implement({
       }
     }).inject( this.canvas );
 
+    this.updateShape(annotation);
     this.editAnnotation( annotation );
 
   },
@@ -133,7 +138,7 @@ IIPMooViewer.implement({
         '</td></tr>' +
         '<tr><td>treshold</td><td>'+annotation_item.treshold+'</td></tr>' +
         '<tr><td colspan="2">' +
-        '<textarea placeholder="Add comment..." name="text" rows="5" tabindex="3">{text}</textarea>' +
+        '<textarea placeholder="Add a comment..." name="text" rows="5" tabindex="3">{text}</textarea>' +
         '</td></tr></table>';
 
     form.set('html', html.substitute({
@@ -173,6 +178,10 @@ IIPMooViewer.implement({
 	delete annotation_item.edit;
 	_this.updateAnnotations();
 	_this.fireEvent('annotationChange', ['updated', id]);
+        if(!first_annotation){
+	 _this.delete_annotation(annotation_item);
+	}
+       _this.save_annotation(annotation_item);
       },
       'reset': function(){
 	delete annotation_item.edit;
@@ -183,6 +192,9 @@ IIPMooViewer.implement({
 
     // Add a delete event to our annotation
     del.addEvent('click', function() {
+	if (!first_annotation){
+       _this.delete_annotation(annotation_item);
+        };
       delete _this.annotations[id];
       _this.updateAnnotations();
       _this.fireEvent('annotationChange', ['deleted', id]);
@@ -253,7 +265,91 @@ IIPMooViewer.implement({
 
   toggleEditFlat: function(id){
 
-  }
+  },
 
+  //Create xml Dom in ASAP format and saves annotation info.
+  save_annotation: function(annotation){
+  var  _this = this;
+ // for first created annotation, create DOM
+ if (first_annotation){
+  doc = document.implementation.createDocument("", "", null);
+  ASAP_annot = doc.createElement("ASAP_Annotations");
+  xml_annotations = doc.createElement("Annotations");
+  ASAP_annot.appendChild(xml_annotations);
+  doc.appendChild(ASAP_annot);
+  var file_name = 'A-'+this.images[0].src.substring(2, this.images[0].src.length-4)+'.xml';
+  // create save button
+  var save_button = document.createElement("button");
+  save_button.setAttribute("id","save_button");
+  save_button.appendChild(document.createTextNode("Download annotations"));
+  document.getElementById("viewer").appendChild(save_button);
+  document.getElementById("save_button").addEventListener("click", function(){
+  _this.download(file_name);
+        });
+ };
+ first_annotation = false;
+ // calculate 4 coordinates of square annotation in relation with maximum resolution (original scan resolution)
+  var max_w = _this.max_size.w;
+  var max_h = _this.max_size.h;
+  var coordinates = [];
+  coordinates[0] = [annotation.x * max_w, annotation.y * max_h ];
+  coordinates[1] = [annotation.x * max_w + annotation.w *max_w ,annotation.y * max_h];
+  coordinates[2] = [annotation.x * max_w + annotation.w *max_w, annotation.y * max_h + annotation.h *max_h];
+  coordinates[3] = [annotation.x * max_w,annotation.y * max_h + annotation.h *max_h ];
+
+  // create new annotation element for DOM
+  var xml_annotation = doc.createElement("Annotation");
+  xml_annotation.setAttribute("Name", "Annotation "+annotation.id);
+  xml_annotation.setAttribute("Type", "Rectangle");
+  xml_annotation.setAttribute("PartOfGroup", "None");
+  xml_annotation.setAttribute("Color", "#F4FA58");
+  var xml_coordinates = doc.createElement("Coordinates");
+
+// create new coordinate element for each coordinate
+ for (var i = 0; i < 4; i++) {
+  var xml_coordinate = doc.createElement("Coordinate");
+  xml_coordinate.setAttribute("Order", i);
+  xml_coordinate.setAttribute("X", coordinates[i][0]);
+  xml_coordinate.setAttribute("Y", coordinates[i][1]);
+  xml_coordinates.appendChild(xml_coordinate);
+}
+  // append coordinates to annotation
+  xml_annotation.appendChild(xml_coordinates);
+  // append whole annotation to annotations
+  xml_annotations.appendChild(xml_annotation);
+  console.dirxml(doc);
+
+
+ },
+
+// Locally download xml doc  as filename
+download: function(filename) {
+ // convert xml to string
+  var xmlString = new XMLSerializer().serializeToString(doc);
+  var doc_text = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'+ xmlString;
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(doc_text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+},
+
+
+
+// If annotation exists, delete it
+delete_annotation: function(annotation){
+ 	for (var i = 0; i < xml_annotations.childNodes.length; i++) {
+  	if(xml_annotations.childNodes[i].attributes[0].nodeValue.includes(annotation.id)){
+  		xml_annotations.children[i].remove();
+		break;
+  	}
+  };
+  console.dirxml(doc);
+ }
 
 });

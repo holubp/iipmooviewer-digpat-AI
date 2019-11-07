@@ -50,12 +50,16 @@ IIPMooViewer.implement({
 		o.inject( document.id('overlay') );}
 	else if(item[1] == 'annotation'){
         	o.inject( document.id('overlay_2')); }
+        else{o.inject(document.id('overlay_3'));}
       });
     // Create images and layers for blending sliders to work
     this.images[1] = {src: document.id('overlay').value, opacity: 0};
     this.canvas.getChildren('img.layer1').destroy();
    this.images[2] = {src: document.id('overlay_2').value, opacity: 0};
    this.canvas.getChildren('img.layer2').destroy();
+   this.images[3] = {src: document.id('overlay_3').value, opacity: 0};
+   this.canvas.getChildren('image.layer3').destroy();
+
     this.requestImages();
 
 
@@ -74,7 +78,7 @@ IIPMooViewer.implement({
     // Create our control panel and inject it into our container
     new Element( 'div', {
       'class': 'blending',
-      'html': '<h2 title="<h2>Image Comparison</h2>Select the pair of images you wish<br/>to compare from the menus below.<br/>Use the slider to blend smoothly<br/>between them">Image Comparison</h2> <span>Image 1</span> <select id="baselayer"></select> <br /> <br /> <span>Move slider to blend between images:</span> <br /> <div id="area"> <div id="knob"></div> </div> <br /> <span>Image 2</span> <select id="overlay"></select> <br /> <br /> <span>Threshold: <span id="probabilityThreshold"></span> </span> <br /> <div id="area-t"> <div id="knob-t"></div> </div> <br /> <span>Image 3</span> <select id="overlay_2"></select> <br /> <br /> <span>Move slider to blend between images:</span> <br /> <div id="area_2"> <div id="knob_2"></div> </div> '
+      'html': '<h2 title="<h2>Image Comparison</h2>Select the pair of images you wish<br/>to compare from the menus below.<br/>Use the slider to blend smoothly<br/>between them">Image Comparison</h2> <span>Image 1</span> <select id="baselayer"></select> <br /> <br /> <span>Move slider to blend between images:</span> <br /> <div id="area"> <div id="knob"></div> </div> <br /> <span>Image 2</span> <select id="overlay"></select> <br /> <br /> <span>Threshold: <span id="probabilityThreshold"></span> </span> <br /> <div id="area-t"> <div id="knob-t"></div> </div> <br /> <span>Image 3</span> <select id="overlay_2"></select> <br /> <br /> <span>Move slider to blend between images:</span> <br /> <div id="area_2"> <div id="knob_2"></div> </div> <span>Image 4</span> <select id="overlay_3"></select> <br /> <br /> <span>Move slider to blend between images:</span> <br /> <div id="area_3"> <div id="knob_3"></div> </div> '
     }).inject( this.navigation.navcontainer );
 
     document.getElementById("probabilityThreshold").innerHTML = probabilityThreshold;
@@ -130,6 +134,21 @@ IIPMooViewer.implement({
     // Make sure the slider takes into account window resize events
     window.addEvent('resize', function(){ slider_2.autosize(); });
 
+
+  // Create our second  blending slider
+    var slider_3 = new Slider( document.id('area_3'), document.id('knob_3'), {
+      range: [0,100],
+      onChange: function(pos){
+         if( _this.images[3] ){
+           _this.images[3].opacity = pos/100.0;
+           _this.canvas.getChildren('img.layer3').setStyle( 'opacity', _this.images[3].opacity );
+         }
+      }
+    });
+    // Make sure the slider takes into account window resize events
+    window.addEvent('resize', function(){ slider_3.autosize(); });
+
+
 /*
 
     // Add on change events to our select menus
@@ -172,12 +191,12 @@ IIPMooViewer.implement({
 
   dynamic_annoation: function(){
       var _this = this;
-      console.log(this);
+      //console.log(this);
       _this.canvas.addEventListener("click",function(event){
           if (event.ctrlKey){
           _this.pos_X = event.pageX - _this.canvas.offsetLeft;
           _this.pos_Y = event.pageY - _this.canvas.offsetTop;
-          console.log('You clicked on ' + _this.pos_X +' '+ _this.pos_Y);
+          //console.log('You clicked on ' + _this.pos_X +' '+ _this.pos_Y);
          _this.newAnnotation(_this.pos_X,_this.pos_Y);
         }
         });
